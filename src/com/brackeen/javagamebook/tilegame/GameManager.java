@@ -1,12 +1,19 @@
 package com.brackeen.javagamebook.tilegame;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Iterator;
 
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.sampled.AudioFormat;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 import com.brackeen.javagamebook.graphics.*;
 import com.brackeen.javagamebook.sound.*;
@@ -46,6 +53,12 @@ public class GameManager extends GameCore {
     private GameAction jump;
     private GameAction exit;
 
+	private GameAction pause;
+
+	private boolean paused;
+
+	private JPanel pauseMenu;
+
 
     public void init() {
         super.init();
@@ -76,6 +89,38 @@ public class GameManager extends GameCore {
             midiPlayer.getSequence("sounds/music.midi");
         midiPlayer.play(sequence, true);
         toggleDrumPlayback();
+        
+        pauseMenu = new JPanel();
+        JButton resume = new JButton("resume");
+        resume.setFocusable(false);
+        resume.addActionListener(new ActionListener() {
+        	
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		pause.press();
+        	}
+        });
+        JButton exit = new JButton("exit");
+        exit.setFocusable(false);
+        exit.addActionListener(new ActionListener() {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		stop();
+        	}
+        });
+        //create the pause menu
+        Border border = BorderFactory.createLineBorder(Color.BLACK);
+        pauseMenu.add(resume);
+        pauseMenu.add(exit);
+        pauseMenu.setBorder(border);
+        pauseMenu.setVisible(false);
+        pauseMenu.setSize(pauseMenu.getPreferredSize());
+        
+        //makes pause menu in the center
+//        pauseMenu.setLocation(
+//        		(screen.getWidth() - pauseMenu.getWidth()) /2,
+//        		(screen.getHeight() - pauseMenu.getHeight()) /2);
+        screen.getFullScreenWindow().getLayeredPane().add(pauseMenu, JLayeredPane.MODAL_LAYER);
     }
 
 
@@ -94,40 +139,50 @@ public class GameManager extends GameCore {
         moveRight = new GameAction("moveRight");
         jump = new GameAction("jump",
             GameAction.DETECT_INITAL_PRESS_ONLY);
-        exit = new GameAction("exit",
-            GameAction.DETECT_INITAL_PRESS_ONLY);
+//        exit = new GameAction("exit",
+//            GameAction.DETECT_INITAL_PRESS_ONLY);
+        pause = new GameAction("paused",GameAction.DETECT_INITAL_PRESS_ONLY);
 
         inputManager = new InputManager(
             screen.getFullScreenWindow());
-        inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
+//        inputManager.setCursor(InputManager.INVISIBLE_CURSOR);
 
         inputManager.mapToKey(moveLeft, KeyEvent.VK_LEFT);
         inputManager.mapToKey(moveRight, KeyEvent.VK_RIGHT);
         inputManager.mapToKey(jump, KeyEvent.VK_SPACE);
-        inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+//        inputManager.mapToKey(exit, KeyEvent.VK_ESCAPE);
+        inputManager.mapToKey(pause, KeyEvent.VK_ESCAPE);
+
     }
 
 
     private void checkInput(long elapsedTime) {
 
-        if (exit.isPressed()) {
-            stop();
-        }
-
-        Player player = (Player)map.getPlayer();
-        if (player.isAlive()) {
-            float velocityX = 0;
-            if (moveLeft.isPressed()) {
-                velocityX-=player.getMaxSpeed();
-            }
-            if (moveRight.isPressed()) {
-                velocityX+=player.getMaxSpeed();
-            }
-            if (jump.isPressed()) {
-                player.jump(false);
-            }
-            player.setVelocityX(velocityX);
-        }
+//        if (exit.isPressed()) {
+//            stop();
+//        }
+    	
+    	if (pause.isPressed()) {
+    		paused =!paused;
+//    		inputManager.resetAllGameActions();
+    		pauseMenu.setVisible(paused);
+    	}
+    	if(!paused) {
+    		Player player = (Player)map.getPlayer();
+    		if (player.isAlive()) {
+    			float velocityX = 0;
+    			if (moveLeft.isPressed()) {
+    				velocityX-=player.getMaxSpeed();
+    			}
+    			if (moveRight.isPressed()) {
+    				velocityX+=player.getMaxSpeed();
+    			}
+    			if (jump.isPressed()) {
+    				player.jump(false);
+    			}
+    			player.setVelocityX(velocityX);
+    		}
+    	}
 
     }
 
@@ -135,6 +190,9 @@ public class GameManager extends GameCore {
     public void draw(Graphics2D g) {
         renderer.draw(g, map,
             screen.getWidth(), screen.getHeight());
+        if(paused){
+        	pauseMenu.paint(g);
+        }
     }
 
 
@@ -268,26 +326,29 @@ public class GameManager extends GameCore {
         // get keyboard/mouse input
         checkInput(elapsedTime);
 
-        // update player
-        updateCreature(player, elapsedTime);
-        player.update(elapsedTime);
+        if(!paused){
+        	// update player
+        	updateCreature(player, elapsedTime);
+        	player.update(elapsedTime);
 
-        // update other sprites
-        Iterator i = map.getSprites();
-        while (i.hasNext()) {
-            Sprite sprite = (Sprite)i.next();
-            if (sprite instanceof Creature) {
-                Creature creature = (Creature)sprite;
-                if (creature.getState() == Creature.STATE_DEAD) {
-                    i.remove();
-                }
-                else {
-                    updateCreature(creature, elapsedTime);
-                }
-            }
-            // normal update
-            sprite.update(elapsedTime);
-        }
+        	// update other sprites
+        	Iterator i = map.getSprites();
+        	while (i.hasNext()) {
+        		Sprite sprite = (Sprite)i.next();
+        		if (sprite instanceof Creature) {
+        			Creature creature = (Creature)sprite;
+        			if (creature.getState() == Creature.STATE_DEAD) {
+        				i.remove();
+        			}
+        			else {
+        				updateCreature(creature, elapsedTime);
+        			}
+        		}
+        		// normal update
+        		sprite.update(elapsedTime);
+        	}
+ 
+    	}
     }
 
 
