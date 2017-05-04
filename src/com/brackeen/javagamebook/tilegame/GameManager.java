@@ -55,7 +55,7 @@ public class GameManager extends GameCore {
 
 	private GameAction pause;
 
-	private boolean paused;
+	private boolean paused = true;
 
 	private JPanel pauseMenu;
 
@@ -65,7 +65,6 @@ public class GameManager extends GameCore {
 
         // set up input manager
         initInput();
-
         // start resource manager
         resourceManager = new ResourceManager(
         screen.getFullScreenWindow().getGraphicsConfiguration());
@@ -108,18 +107,21 @@ public class GameManager extends GameCore {
         		stop();
         	}
         });
+        
+
         //create the pause menu
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         pauseMenu.add(resume);
         pauseMenu.add(exit);
         pauseMenu.setBorder(border);
-        pauseMenu.setVisible(false);
-        pauseMenu.setSize(pauseMenu.getPreferredSize());
         
+        pauseMenu.setSize(pauseMenu.getPreferredSize());
+
         //makes pause menu in the center
 //        pauseMenu.setLocation(
 //        		(screen.getWidth() - pauseMenu.getWidth()) /2,
 //        		(screen.getHeight() - pauseMenu.getHeight()) /2);
+      
         screen.getFullScreenWindow().getLayeredPane().add(pauseMenu, JLayeredPane.MODAL_LAYER);
     }
 
@@ -161,7 +163,6 @@ public class GameManager extends GameCore {
 //        if (exit.isPressed()) {
 //            stop();
 //        }
-    	
     	if (pause.isPressed()) {
     		paused =!paused;
 //    		inputManager.resetAllGameActions();
@@ -190,6 +191,7 @@ public class GameManager extends GameCore {
     public void draw(Graphics2D g) {
         renderer.draw(g, map,
             screen.getWidth(), screen.getHeight());
+
         if(paused){
         	pauseMenu.paint(g);
         }
