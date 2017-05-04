@@ -121,7 +121,7 @@ public abstract class GameCore {
             screen.update();
 
             try {
-                Thread.sleep(20);
+                Thread.sleep(10);
             }
             catch (InterruptedException ex) { }
         }
