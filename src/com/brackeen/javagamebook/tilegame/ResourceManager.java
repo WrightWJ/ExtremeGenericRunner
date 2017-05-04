@@ -238,12 +238,17 @@ public class ResourceManager {
 
         // load left-facing images
         images[0] = new Image[] {
-            loadImage("player1.png"),
-            loadImage("player2.png"),
-            loadImage("player3.png"),
-            loadImage("fly1.png"),
-            loadImage("fly2.png"),
-            loadImage("fly3.png"),
+            loadImage("player 1.png"),
+            loadImage("player 2.png"),
+            loadImage("player 3.png"),
+            loadImage("player 4.png"),
+            loadImage("player 5.png"),
+            loadImage("player 6.png"),
+            loadImage("player 7.png"),
+            loadImage("player 8.png"),
+            loadImage("Wood Box.png"),
+            loadImage("Wood Box Break 1.png"),
+            loadImage("Wood Box Break 2.png"),
             loadImage("grub1.png"),
             loadImage("grub2.png"),
         };
@@ -261,16 +266,16 @@ public class ResourceManager {
         }
 
         // create creature animations
-        Animation[] playerAnim = new Animation[4];
+        Animation[] playerAnim = new Animation[8];
         Animation[] flyAnim = new Animation[4];
         Animation[] grubAnim = new Animation[4];
         for (int i=0; i<4; i++) {
             playerAnim[i] = createPlayerAnim(
-                images[i][0], images[i][1], images[i][2]);
+                images[i][0], images[i][1], images[i][2], images[i][3], images[i][4], images[i][5], images[i][6], images[i][7]);
             flyAnim[i] = createFlyAnim(
-                images[i][3], images[i][4], images[i][5]);
+                images[i][8], images[i][9], images[i][10]);
             grubAnim[i] = createGrubAnim(
-                images[i][6], images[i][7]);
+                images[i][11], images[i][12]);
         }
 
         // create creature sprites
@@ -284,15 +289,23 @@ public class ResourceManager {
 
 
     private Animation createPlayerAnim(Image player1,
-        Image player2, Image player3)
+        Image player2, Image player3, Image player4, Image player5, Image player6, Image player7, Image player8)
     {
         Animation anim = new Animation();
-        anim.addFrame(player1, 250);
+        anim.addFrame(player8, 150);
+        anim.addFrame(player7, 150);
+        anim.addFrame(player6, 150);
+        anim.addFrame(player5, 150);
+        anim.addFrame(player4, 150);
+        anim.addFrame(player3, 150);
         anim.addFrame(player2, 150);
         anim.addFrame(player1, 150);
         anim.addFrame(player2, 150);
-        anim.addFrame(player3, 200);
-        anim.addFrame(player2, 150);
+        anim.addFrame(player3, 150);
+        anim.addFrame(player4, 150);
+        anim.addFrame(player5, 150);
+        anim.addFrame(player6, 150);
+        anim.addFrame(player7, 150);
         return anim;
     }
 
@@ -316,6 +329,11 @@ public class ResourceManager {
         return anim;
     }
 
+    private Animation createSlideAnim(Image img1) {
+        Animation anim = new Animation();
+        anim.addFrame(img1, 100);
+        return anim;
+    }
 
     private void loadPowerUpSprites() {
         // create "goal" sprite
@@ -339,7 +357,7 @@ public class ResourceManager {
         anim.addFrame(loadImage("music1.png"), 150);
         anim.addFrame(loadImage("music2.png"), 150);
         anim.addFrame(loadImage("music3.png"), 150);
-        anim.addFrame(loadImage("music2.png"), 150);
+        //anim.addFrame(loadImage("music2.png"), 150);
         musicSprite = new PowerUp.Music(anim);
     }
 
