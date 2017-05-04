@@ -144,7 +144,7 @@ public class ScreenManager {
             // ignore
         }
 
-
+        NullRepaintManager.install();
     }
 
 

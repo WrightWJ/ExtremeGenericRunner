@@ -238,14 +238,14 @@ public class ResourceManager {
 
         // load left-facing images
         images[0] = new Image[] {
-            loadImage("player 1.png"),
-            loadImage("player 2.png"),
-            loadImage("player 3.png"),
-            loadImage("player 4.png"),
-            loadImage("player 5.png"),
-            loadImage("player 6.png"),
-            loadImage("player 7.png"),
-            loadImage("player 8.png"),
+            loadImage("Player 1.png"),
+            loadImage("Player 2.png"),
+            loadImage("Player 3.png"),
+            loadImage("Player 4.png"),
+            loadImage("Player 5.png"),
+            loadImage("Player 6.png"),
+            loadImage("Player 7.png"),
+            loadImage("Player 8.png"),
             loadImage("Wood Box.png"),
             loadImage("Wood Box Break 1.png"),
             loadImage("Wood Box Break 2.png"),

@@ -167,6 +167,7 @@ public class GameManager extends GameCore {
     		paused =!paused;
 //    		inputManager.resetAllGameActions();
     		pauseMenu.setVisible(paused);
+    		pause.reset();
     	}
     	if(!paused) {
     		Player player = (Player)map.getPlayer();
