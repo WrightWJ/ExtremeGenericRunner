@@ -170,6 +170,7 @@ public class GameManager extends GameCore {
 		}
 		if(!paused) {
 			Player player = (Player)map.getPlayer();
+			
 			if (player.isAlive()) {
 				float velocityX = 0;
 				velocityX+=player.getMaxSpeed();
@@ -177,6 +178,8 @@ public class GameManager extends GameCore {
 			}
 			if (jump.isPressed()) {
 				player.jump(false);
+			} else if (jump.isReleased()){
+				player.setVelocityY(.6f);
 			}
 		}
 	}

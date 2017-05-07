@@ -111,7 +111,13 @@ public class GameAction {
     public synchronized boolean isPressed() {
         return (getAmount() != 0);
     }
-
+    
+    public synchronized boolean isReleased(){
+    	if (state == STATE_RELEASED){
+    		return true;
+    	}
+    	return false;
+    }
 
     /**
         For keys, this is the number of times the key was
