@@ -75,22 +75,19 @@ public class TileMapRenderer {
     /**
         Draws the specified TileMap.
     */
-    public void draw(Graphics2D g, TileMap map,
-        int screenWidth, int screenHeight)
+    public void draw(Graphics2D g, TileMap map, int screenWidth, int screenHeight)
     {
         Sprite player = map.getPlayer();
         int mapWidth = tilesToPixels(map.getWidth());
 
         // get the scrolling position of the map
         // based on player's position
-        int offsetX = screenWidth / 2 -
-            Math.round(player.getX()) - TILE_SIZE;
+        int offsetX = screenWidth / 2 - Math.round(player.getX()) - TILE_SIZE;
         offsetX = Math.min(offsetX, 0);
         offsetX = Math.max(offsetX, screenWidth - mapWidth);
 
         // get the y offset to draw all sprites and tiles
-        int offsetY = screenHeight -
-            tilesToPixels(map.getHeight());
+        int offsetY = screenHeight - tilesToPixels(map.getHeight());
 
         // draw black background, if needed
         if (background == null ||
