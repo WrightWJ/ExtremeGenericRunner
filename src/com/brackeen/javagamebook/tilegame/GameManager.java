@@ -36,7 +36,7 @@ public class GameManager extends GameCore {
 
 	private static final int DRUM_TRACK = 1;
 
-	public static final float GRAVITY = 0.005f;
+	public static final float GRAVITY = 0.003f;
 
 	private Point pointCache = new Point();
 	private Map map;
@@ -58,6 +58,8 @@ public class GameManager extends GameCore {
 	private boolean paused = true;
 
 	private JPanel pauseMenu;
+
+	private boolean xCollision;
 
 
 	public void init() {
@@ -145,7 +147,7 @@ public class GameManager extends GameCore {
 	private void initInput() {
 		moveLeft = new GameAction("moveLeft");
 		moveRight = new GameAction("moveRight");
-		jump = new GameAction("jump");
+		jump = new GameAction("jump", GameAction.DETECT_INITAL_PRESS_ONLY);
 		//        exit = new GameAction("exit",
 		//            GameAction.DETECT_INITAL_PRESS_ONLY);
 		pause = new GameAction("paused",GameAction.DETECT_INITAL_PRESS_ONLY);
@@ -380,6 +382,14 @@ public class GameManager extends GameCore {
 		float dx = creature.getVelocityX();
 		float oldX = creature.getX();
 		float newX = oldX + dx * elapsedTime;
+		Building building = getBuildingCollisionX(creature, creature.getX(), creature.getY());
+		if(building==null){
+			map.setVel(map.getVel()+0.001);
+		}else if(creature.getY()>building.getY()){
+			map.setVel(0);
+			xCollision=true;
+			creature.collideHorizontal();
+		}
 		//		Point tile =getTileCollision(creature, newX, creature.getY());
 		//		if (tile == null) {
 		//			creature.setX(newX);
@@ -405,14 +415,25 @@ public class GameManager extends GameCore {
 		float dy = creature.getVelocityY();
 		float oldY = creature.getY();
 		float newY = oldY + dy * elapsedTime;
-		Building building = getbuildingCollision(creature, creature.getX(), newY);
+		building = getbuildingCollisionY(creature, creature.getX(), newY);
 		if(building==null){
+			((Player)creature).onGround=false;
 			creature.setY(newY);
 		}else {
-			if(dy>0){
+			if(dy>0&&((Player)creature).onGround){
 				creature.setY(building.getY()-creature.getHeight());
+				creature.collideVertical();
+			}else if(dy>0&&creature.getY()+creature.getHeight()<building.getY()){
+				creature.setY(newY);
+			}else if(dy>0&&creature.getY()+creature.getHeight()>=building.getY()){
+				creature.setY(building.getY()-creature.getHeight());
+				creature.collideVertical();
+			}else{
+
+				creature.setY(newY);
 			}
-			creature.collideVertical();
+			System.out.println("after dy="+creature.getVelocityY());
+			System.out.println("after    "+((creature instanceof Player) ? ((Player)creature).onGround:"not palyer"));
 		}
 
 
@@ -441,15 +462,26 @@ public class GameManager extends GameCore {
 	}
 
 
-	private Building getbuildingCollision(Creature creature, float f, float newY) {
-		for(int i = 0; i<1; i++){
+	private Building getBuildingCollisionX(Creature creature, float x, float y) {
+		for(int i = 0; i<2; i++){
+			if(map.buildings.get(i).getX()<=x+creature.getWidth()){
+				if(map.buildings.get(i).getY()<y+creature.getHeight()){
+					return map.buildings.get(i);
+				}return null;
+			}return null;
+		}return null;
+	}
+
+
+	private Building getbuildingCollisionY(Creature creature, float f, float newY) {
+		for(int i = 0; i<2; i++){
 			double bldgMinX = map.buildings.get(i).getX();
 			double bldgMaxX=map.buildings.get(i).getEndPoint();
-			if(bldgMinX<creature.getX()+creature.getWidth()&&bldgMaxX>creature.getX()){
-				if(map.buildings.get(i).getY()>=creature.getY()+creature.getHeight()){
+			if(bldgMinX<(creature.getX()+(creature.getWidth()/2))&&bldgMaxX>creature.getX()+(creature.getWidth()/2)&&!xCollision){
+				if(map.buildings.get(i).getY()<=creature.getY()+creature.getHeight()){
 					return map.buildings.get(i);
-				}
-			}
+				}else return null;
+			}else return null;
 		}
 		return null;
 	}

@@ -121,6 +121,7 @@ public class Building {
 	public double getY() {
 		return this.y;
 	}
+	
 
 	public int getWidth(){
 		return WIDTH_LEFT_PIECE+(WIDTH_MID_PIECE*bldgLength)+WIDTH_RIGHT_PIECE;

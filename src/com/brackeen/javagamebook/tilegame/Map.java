@@ -44,6 +44,10 @@ public class Map {
 	public void removeSprite(Sprite sprite) {
 		sprites.remove(sprite);
 	}
+	
+	public void setVel(double newVel){
+		this.bldgVel=newVel;
+	}
 
 
 	/**
@@ -72,5 +76,10 @@ public class Map {
 		for(Building bldg:buildings){
 			bldg.updatePos(elapsedTime, this.bldgVel);
 		}
+	}
+
+
+	public double getVel() {
+		return bldgVel;
 	}
 }

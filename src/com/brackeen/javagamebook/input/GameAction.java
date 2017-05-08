@@ -23,6 +23,7 @@ public class GameAction {
     private static final int STATE_RELEASED = 0;
     private static final int STATE_PRESSED = 1;
     private static final int STATE_WAITING_FOR_RELEASE = 2;
+    private static final int STATE_WAITING_FOR_PRESS = 3;
 
     private String name;
     private int behavior;
@@ -114,6 +115,7 @@ public class GameAction {
     
     public synchronized boolean isReleased(){
     	if (state == STATE_RELEASED){
+    		state = STATE_WAITING_FOR_PRESS;
     		return true;
     	}
     	return false;
