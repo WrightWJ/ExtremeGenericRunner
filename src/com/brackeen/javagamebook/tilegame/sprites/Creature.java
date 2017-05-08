@@ -173,4 +173,6 @@ public abstract class Creature extends Sprite {
         }
     }
 
+
+
 }

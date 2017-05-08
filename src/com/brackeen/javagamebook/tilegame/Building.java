@@ -37,7 +37,7 @@ public class Building {
 	}
 
 	public void generate(){
-		this.y=rand.nextInt(50)+350;
+		this.y=rand.nextInt(100)+350;
 		this.x=this.lastBldg+rand.nextInt(150)+50;
 		bldgImg[0]=getLeftPiece();
 		bldgImg[bldgImg.length-1]=getRightPiece();
@@ -53,7 +53,7 @@ public class Building {
 		while(morePieces){
 			BufferedImage img;
 			try {
-				img = ImageIO.read(new File("Images/BLDG_Left_"+i+".png"));
+				img = ImageIO.read(new File("images/buildings/BLDG_Left_"+i+".png"));
 				buildingLeftPieces.add(img);
 				System.out.println("Success!");
 			} catch (IOException e1) {
@@ -69,7 +69,7 @@ public class Building {
 		while(morePieces){
 			BufferedImage img;
 			try {
-				img = ImageIO.read(new File("Images/BLDG_Right_"+i+".png"));
+				img = ImageIO.read(new File("images/buildings/BLDG_Right_"+i+".png"));
 				buildingRightPieces.add(img);
 				System.out.println("Success!");
 			} catch (IOException e1) {
@@ -85,7 +85,7 @@ public class Building {
 		while(morePieces){
 			BufferedImage img;
 			try {
-				img = ImageIO.read(new File("Images/BLDG_Middle_"+i+".png"));
+				img = ImageIO.read(new File("images/buildings/BLDG_Middle_"+i+".png"));
 				buildingMidPieces.add(img);
 				System.out.println("Success!");
 			} catch (IOException e1) {

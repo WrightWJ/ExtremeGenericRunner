@@ -7,7 +7,7 @@ public class Sprite {
     protected Animation anim;
     // position (pixels)
     private float x;
-    private float y;
+    protected float y;
     // velocity (pixels per millisecond)
     private float dx;
     private float dy;
@@ -46,15 +46,15 @@ public class Sprite {
     /**
         Sets this Sprite's current x position.
     */
-    public void setX(float x) {
-        this.x = x;
+    public void setX(double x) {
+        this.x = (float)x;
     }
 
     /**
         Sets this Sprite's current y position.
     */
-    public void setY(float y) {
-        this.y = y;
+    public void setY(double y) {
+        this.y = (float)y;
     }
 
     /**

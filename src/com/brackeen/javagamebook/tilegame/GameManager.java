@@ -36,17 +36,17 @@ public class GameManager extends GameCore {
 
 	private static final int DRUM_TRACK = 1;
 
-	public static final float GRAVITY = 0.002f;
+	public static final float GRAVITY = 0.005f;
 
 	private Point pointCache = new Point();
-	private TileMap map;
+	private Map map;
 	private MidiPlayer midiPlayer;
 	private SoundManager soundManager;
 	private ResourceManager resourceManager;
 	private Sound prizeSound;
 	private Sound boopSound;
 	private InputManager inputManager;
-	private TileMapRenderer renderer;
+	private BuildingRenderer renderer;
 
 	private GameAction moveLeft;
 	private GameAction moveRight;
@@ -70,12 +70,18 @@ public class GameManager extends GameCore {
 				screen.getFullScreenWindow().getGraphicsConfiguration());
 
 		// load resources
-		renderer = new TileMapRenderer();
+		//		renderer = new TileMapRenderer();
+		//		renderer.setBackground(
+		//				resourceManager.loadImage("background.png"));
+		renderer = new BuildingRenderer();
 		renderer.setBackground(
 				resourceManager.loadImage("background.png"));
 
+
 		// load first map
-		map = resourceManager.loadNextMap();
+		//		map = resourceManager.loadNextMap();
+
+		map = resourceManager.initializeMap();
 
 		// load sounds
 		soundManager = new SoundManager(PLAYBACK_FORMAT);
@@ -170,7 +176,7 @@ public class GameManager extends GameCore {
 		}
 		if(!paused) {
 			Player player = (Player)map.getPlayer();
-			
+
 			if (player.isAlive()) {
 				float velocityX = 0;
 				velocityX+=player.getMaxSpeed();
@@ -179,7 +185,7 @@ public class GameManager extends GameCore {
 			if (jump.isPressed()) {
 				player.jump(false);
 			} else if (jump.isReleased()){
-				player.setVelocityY(.6f);
+				player.setVelocityY(0);
 			}
 		}
 	}
@@ -188,8 +194,7 @@ public class GameManager extends GameCore {
 
 
 	public void draw(Graphics2D g) {
-		renderer.draw(g, map,
-				screen.getWidth(), screen.getHeight());
+		renderer.draw(g, map, screen.getWidth(), screen.getHeight());
 
 		if(paused){
 			pauseMenu.paint(g);
@@ -200,7 +205,7 @@ public class GameManager extends GameCore {
 	/**
         Gets the current map.
 	 */
-	public TileMap getMap() {
+	public Map getMap() {
 		return map;
 	}
 
@@ -222,38 +227,40 @@ public class GameManager extends GameCore {
         Sprite's X or Y should be changed, not both. Returns null
         if no collision is detected.
 	 */
-	public Point getTileCollision(Sprite sprite,
-			float newX, float newY)
-	{
-		float fromX = Math.min(sprite.getX(), newX);
-		float fromY = Math.min(sprite.getY(), newY);
-		float toX = Math.max(sprite.getX(), newX);
-		float toY = Math.max(sprite.getY(), newY);
+	//	public Point getTileCollision(Sprite sprite,
+	//			float newX, float newY)
+	//	{
+	//		float fromX = Math.min(sprite.getX(), newX);
+	//		float fromY = Math.min(sprite.getY(), newY);
+	//		float toX = Math.max(sprite.getX(), newX);
+	//		float toY = Math.max(sprite.getY(), newY);
+	//
+	//		// get the tile locations
+	//		int fromTileX = TileMapRenderer.pixelsToTiles(fromX);
+	//		int fromTileY = TileMapRenderer.pixelsToTiles(fromY);
+	//		int toTileX = TileMapRenderer.pixelsToTiles(
+	//				toX + sprite.getWidth() - 1);
+	//		int toTileY = TileMapRenderer.pixelsToTiles(
+	//				toY + sprite.getHeight() - 1);
+	//
+	//		// check each tile for a collision
+	//		for (int x=fromTileX; x<=toTileX; x++) {
+	//			for (int y=fromTileY; y<=toTileY; y++) {
+	//				if (x < 0 || x >= map.getWidth() ||
+	//						map.getTile(x, y) != null)
+	//				{
+	//					// collision found, return the tile
+	//					pointCache.setLocation(x, y);
+	//					return pointCache;
+	//				}
+	//			}
+	//		}
+	//
+	//		// no collision found
+	//		return null;
+	//	}
 
-		// get the tile locations
-		int fromTileX = TileMapRenderer.pixelsToTiles(fromX);
-		int fromTileY = TileMapRenderer.pixelsToTiles(fromY);
-		int toTileX = TileMapRenderer.pixelsToTiles(
-				toX + sprite.getWidth() - 1);
-		int toTileY = TileMapRenderer.pixelsToTiles(
-				toY + sprite.getHeight() - 1);
 
-		// check each tile for a collision
-		for (int x=fromTileX; x<=toTileX; x++) {
-			for (int y=fromTileY; y<=toTileY; y++) {
-				if (x < 0 || x >= map.getWidth() ||
-						map.getTile(x, y) != null)
-				{
-					// collision found, return the tile
-					pointCache.setLocation(x, y);
-					return pointCache;
-				}
-			}
-		}
-
-		// no collision found
-		return null;
-	}
 
 
 	/**
@@ -293,21 +300,21 @@ public class GameManager extends GameCore {
         Gets the Sprite that collides with the specified Sprite,
         or null if no Sprite collides with the specified Sprite.
 	 */
-	public Sprite getSpriteCollision(Sprite sprite) {
-
-		// run through the list of Sprites
-		Iterator i = map.getSprites();
-		while (i.hasNext()) {
-			Sprite otherSprite = (Sprite)i.next();
-			if (isCollision(sprite, otherSprite)) {
-				// collision found, return the Sprite
-				return otherSprite;
-			}
-		}
-
-		// no collision found
-		return null;
-	}
+	//	public Sprite getSpriteCollision(Sprite sprite) {
+	//
+	//		// run through the list of Sprites
+	//		Iterator i = map.getSprites();
+	//		while (i.hasNext()) {
+	//			Sprite otherSprite = (Sprite)i.next();
+	//			if (isCollision(sprite, otherSprite)) {
+	//				// collision found, return the Sprite
+	//				return otherSprite;
+	//			}
+	//		}
+	//
+	//		// no collision found
+	//		return null;
+	//	}
 
 
 	/**
@@ -320,7 +327,7 @@ public class GameManager extends GameCore {
 
 		// player is dead! start map over
 		if (player.getState() == Creature.STATE_DEAD) {
-			map = resourceManager.reloadMap();
+			//			map = resourceManager.reloadMap();
 			return;
 		}
 
@@ -332,22 +339,24 @@ public class GameManager extends GameCore {
 			updateCreature(player, elapsedTime);
 			player.update(elapsedTime);
 
+			map.updateBuildings(elapsedTime);
+
 			// update other sprites
-			Iterator i = map.getSprites();
-			while (i.hasNext()) {
-				Sprite sprite = (Sprite)i.next();
-				if (sprite instanceof Creature) {
-					Creature creature = (Creature)sprite;
-					if (creature.getState() == Creature.STATE_DEAD) {
-						i.remove();
-					}
-					else {
-						updateCreature(creature, elapsedTime);
-					}
-				}
-				// normal update
-				sprite.update(elapsedTime);
-			}
+			//			Iterator i = map.getSprites();
+			//			while (i.hasNext()) {
+			//				Sprite sprite = (Sprite)i.next();
+			//				if (sprite instanceof Creature) {
+			//					Creature creature = (Creature)sprite;
+			//					if (creature.getState() == Creature.STATE_DEAD) {
+			//						i.remove();
+			//					}
+			//					else {
+			//						updateCreature(creature, elapsedTime);
+			//					}
+			//				}
+			//				// normal update
+			//				sprite.update(elapsedTime);
+			//			}
 
 		}
 	}
@@ -371,24 +380,23 @@ public class GameManager extends GameCore {
 		float dx = creature.getVelocityX();
 		float oldX = creature.getX();
 		float newX = oldX + dx * elapsedTime;
-		Point tile =
-				getTileCollision(creature, newX, creature.getY());
-		if (tile == null) {
-			creature.setX(newX);
-		}
-		else {
-			// line up with the tile boundary
-			if (dx > 0) {
-				creature.setX(
-						TileMapRenderer.tilesToPixels(tile.x) -
-						creature.getWidth());
-			}
-			else if (dx < 0) {
-				creature.setX(
-						TileMapRenderer.tilesToPixels(tile.x + 1));
-			}
-			creature.collideHorizontal();
-		}
+		//		Point tile =getTileCollision(creature, newX, creature.getY());
+		//		if (tile == null) {
+		//			creature.setX(newX);
+		//		}
+		//		else {
+		//			// line up with the tile boundary
+		//			if (dx > 0) {
+		//				creature.setX(
+		//						TileMapRenderer.tilesToPixels(tile.x) -
+		//						creature.getWidth());
+		//			}
+		//			else if (dx < 0) {
+		//				creature.setX(
+		//						TileMapRenderer.tilesToPixels(tile.x + 1));
+		//			}
+		//			creature.collideHorizontal();
+		//		}
 		if (creature instanceof Player) {
 			checkPlayerCollision((Player)creature, false);
 		}
@@ -397,28 +405,53 @@ public class GameManager extends GameCore {
 		float dy = creature.getVelocityY();
 		float oldY = creature.getY();
 		float newY = oldY + dy * elapsedTime;
-		tile = getTileCollision(creature, creature.getX(), newY);
-		if (tile == null) {
+		Building building = getbuildingCollision(creature, creature.getX(), newY);
+		if(building==null){
 			creature.setY(newY);
-		}
-		else {
-			// line up with the tile boundary
-			if (dy > 0) {
-				creature.setY(
-						TileMapRenderer.tilesToPixels(tile.y) -
-						creature.getHeight());
-			}
-			else if (dy < 0) {
-				creature.setY(
-						TileMapRenderer.tilesToPixels(tile.y + 1));
+		}else {
+			if(dy>0){
+				creature.setY(building.getY()-creature.getHeight());
 			}
 			creature.collideVertical();
 		}
+
+
+		//		tile = getTileCollision(creature, creature.getX(), newY);
+		//		if (tile == null) {
+		//			creature.setY(newY);
+		//		}
+		//		else {
+		//			// line up with the tile boundary
+		//			if (dy > 0) {
+		//				creature.setY(
+		//						TileMapRenderer.tilesToPixels(tile.y) -
+		//						creature.getHeight());
+		//			}
+		//			else if (dy < 0) {
+		//				creature.setY(
+		//						TileMapRenderer.tilesToPixels(tile.y + 1));
+		//			}
+		//			creature.collideVertical();
+		//		}
 		if (creature instanceof Player) {
 			boolean canKill = (oldY < creature.getY());
 			checkPlayerCollision((Player)creature, canKill);
 		}
 
+	}
+
+
+	private Building getbuildingCollision(Creature creature, float f, float newY) {
+		for(int i = 0; i<1; i++){
+			double bldgMinX = map.buildings.get(i).getX();
+			double bldgMaxX=map.buildings.get(i).getEndPoint();
+			if(bldgMinX<creature.getX()+creature.getWidth()&&bldgMaxX>creature.getX()){
+				if(map.buildings.get(i).getY()>=creature.getY()+creature.getHeight()){
+					return map.buildings.get(i);
+				}
+			}
+		}
+		return null;
 	}
 
 
@@ -435,24 +468,24 @@ public class GameManager extends GameCore {
 		}
 
 		// check for player collision with other sprites
-		Sprite collisionSprite = getSpriteCollision(player);
-		if (collisionSprite instanceof PowerUp) {
-			acquirePowerUp((PowerUp)collisionSprite);
-		}
-		else if (collisionSprite instanceof Creature) {
-			Creature badguy = (Creature)collisionSprite;
-			if (canKill) {
-				// kill the badguy and make player bounce
-				soundManager.play(boopSound);
-				badguy.setState(Creature.STATE_DYING);
-				player.setY(badguy.getY() - player.getHeight());
-				player.jump(true);
-			}
-			else {
-				// player dies!
-				player.setState(Creature.STATE_DYING);
-			}
-		}
+		//		Sprite collisionSprite = getSpriteCollision(player);
+		//		if (collisionSprite instanceof PowerUp) {
+		//			acquirePowerUp((PowerUp)collisionSprite);
+		//		}
+		//		else if (collisionSprite instanceof Creature) {
+		//			Creature badguy = (Creature)collisionSprite;
+		//			if (canKill) {
+		//				// kill the badguy and make player bounce
+		//				soundManager.play(boopSound);
+		//				badguy.setState(Creature.STATE_DYING);
+		//				player.setY(badguy.getY() - player.getHeight());
+		//				player.jump(true);
+		//			}
+		//			else {
+		//				// player dies!
+		//				player.setState(Creature.STATE_DYING);
+		//			}
+		//		}
 	}
 
 
@@ -477,7 +510,7 @@ public class GameManager extends GameCore {
 			// advance to next map
 			soundManager.play(prizeSound,
 					new EchoFilter(2000, .7f), false);
-			map = resourceManager.loadNextMap();
+			//			map = resourceManager.loadNextMap();
 		}
 	}
 
