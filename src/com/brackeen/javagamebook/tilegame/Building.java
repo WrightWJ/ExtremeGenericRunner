@@ -26,7 +26,7 @@ public class Building {
 	private double lastBldg;
 	public BufferedImage[] bldgImg;
 
-	int bldgLength = rand.nextInt(10)+1;
+	int bldgLength = rand.nextInt(10)+2;
 
 
 	public Building(double bldgVel, double lastBldg){

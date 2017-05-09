@@ -12,6 +12,7 @@ import javax.sound.sampled.AudioFormat;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
@@ -60,7 +61,10 @@ public class GameManager extends GameCore {
 	private boolean ded = false;
 
 	private JPanel pauseMenu;
+	private JPanel pauseMenu1;
+
 	private JPanel end;
+	private int counter = 0;
 
 	private boolean xCollision;
 
@@ -96,11 +100,28 @@ public class GameManager extends GameCore {
 		// start music
 		midiPlayer = new MidiPlayer();
 		Sequence sequence =
-				midiPlayer.getSequence("sounds/music.midi");
+				midiPlayer.getSequence("sounds/music.mid");
 		midiPlayer.play(sequence, true);
 		toggleDrumPlayback();
 
 
+		pauseMenu1 = new JPanel();
+		JButton go = new JButton("Go!");
+		go.setFocusable(false);
+		go.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				pause.press();
+			}
+		});
+		JButton exit1 = new JButton("exit");
+		exit1.setFocusable(false);
+		exit1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				stop();
+			}
+		});
 		//creates final screen
 		end = new JPanel();
 		end.setBounds(0, 0, screen.getWidth(), screen.getHeight());
@@ -115,13 +136,13 @@ public class GameManager extends GameCore {
 			}
 		});
 		end.add(died);
-		
 
-		
-		
-		
-		
-		
+
+		JLabel label = new JLabel("Welcome to SUPER EXTREME GENERIC RUNNING GAME! To jump between buildings press the up arrow. Good luck!");
+
+
+
+
 		pauseMenu = new JPanel();
 		JButton resume = new JButton("resume");
 		resume.setFocusable(false);
@@ -140,7 +161,7 @@ public class GameManager extends GameCore {
 				stop();
 			}
 		});
-		
+
 		//create the pause menu
 		Border border = BorderFactory.createLineBorder(Color.BLACK);
 		pauseMenu.add(resume);
@@ -155,6 +176,14 @@ public class GameManager extends GameCore {
 		//        		(screen.getHeight() - pauseMenu.getHeight()) /2);
 
 		screen.getFullScreenWindow().getLayeredPane().add(pauseMenu, JLayeredPane.MODAL_LAYER);
+
+		pauseMenu1.add(label);
+		pauseMenu1.add(go);
+		pauseMenu1.add(exit1);
+		pauseMenu1.setBorder(border);
+		pauseMenu1.setSize(800, 80);
+
+		screen.getFullScreenWindow().getLayeredPane().add(pauseMenu1, JLayeredPane.MODAL_LAYER);
 	}
 
 
@@ -198,7 +227,9 @@ public class GameManager extends GameCore {
 			paused =!paused;
 			//    		inputManager.resetAllGameActions();
 			pauseMenu.setVisible(paused);
+			pauseMenu1.setVisible(false);
 			pause.reset();
+			counter++;
 		}
 		if(!paused) {
 			Player player = (Player)map.getPlayer();
@@ -215,14 +246,13 @@ public class GameManager extends GameCore {
 			}
 		}
 	}
-
-
-
-
 	public void draw(Graphics2D g) {
 		renderer.draw(g, map, screen.getWidth(), screen.getHeight());
 
-		if(paused){
+		if(paused && counter == 0){
+			pauseMenu.paint(g);		
+			pauseMenu1.paint(g);
+		} else if (paused && counter >= 0){
 			pauseMenu.paint(g);
 		}
 		if(ded){
@@ -413,7 +443,7 @@ public class GameManager extends GameCore {
 		float newX = oldX + dx * elapsedTime;
 		Building building = getBuildingCollisionX(creature, creature.getX(), creature.getY());
 		if(building==null){
-			map.setVel(map.getVel()+0.001);
+			map.setVel(map.getVel()+0.0001f);
 		}else if(creature.getY()>building.getY()){
 			map.setVel(0);
 			xCollision=true;
