@@ -26,7 +26,7 @@ public class Building {
 	private double lastBldg;
 	public BufferedImage[] bldgImg;
 
-	int bldgLength = rand.nextInt(10)+1;
+	int bldgLength = rand.nextInt(9)+2;
 
 
 	public Building(double bldgVel, double lastBldg){
@@ -37,8 +37,8 @@ public class Building {
 	}
 
 	public void generate(){
-		this.y=rand.nextInt(100)+350;
-		this.x=this.lastBldg+rand.nextInt(150)+50;
+		this.y=rand.nextInt(75)+350;
+		this.x=this.lastBldg+rand.nextInt(200)+(bldgVel*250);
 		bldgImg[0]=getLeftPiece();
 		bldgImg[bldgImg.length-1]=getRightPiece();
 		for(int i = 1; i<bldgLength; i++){

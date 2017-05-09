@@ -432,8 +432,6 @@ public class GameManager extends GameCore {
 
 				creature.setY(newY);
 			}
-			System.out.println("after dy="+creature.getVelocityY());
-			System.out.println("after    "+((creature instanceof Player) ? ((Player)creature).onGround:"not palyer"));
 		}
 
 

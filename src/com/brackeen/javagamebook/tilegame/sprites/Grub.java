@@ -7,8 +7,7 @@ import com.brackeen.javagamebook.graphics.Animation;
 */
 public class Grub extends Creature {
 
-    public Grub(Animation left, Animation right,
-        Animation deadLeft, Animation deadRight)
+    public Grub(Animation left, Animation right, Animation deadLeft, Animation deadRight)
     {
         super(left, right, deadLeft, deadRight);
     }
